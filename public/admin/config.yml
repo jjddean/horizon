@@ -1,6 +1,8 @@
 backend:
   name: git-gateway
   branch: main # Or the branch your site builds from (e.g., master)
+  auth_providers:
+    - github
 publish_mode: editorial_workflow # Optional: Enables draft/review/publish workflow
 media_folder: "public/uploads" # Where media files will be stored in your repo
 public_folder: "/uploads" # Path to access media files on your site
@@ -17,3 +19,4 @@ collections:
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Body", name: "body", widget: "markdown" }
         # =================================
+
