@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
     import { NavLink } from 'react-router-dom';
     import { motion } from 'framer-motion';
-    import { Zap, Menu, X, Gift, Star, Info, Cpu } from 'lucide-react';
+    import { Zap, Menu, X, Gift, Star, Info, Cpu, ShoppingBag } from 'lucide-react';
     import { Button } from '@/components/ui/button';
     import { useToast } from '@/components/ui/use-toast';
 
@@ -47,6 +47,9 @@ import React, { useState } from 'react';
               <NavItem to="/deals">
                 <Gift className="h-4 w-4" /> Deals
               </NavItem>
+              <NavItem to="/marketplace">
+                <ShoppingBag className="h-4 w-4" /> Marketplace
+              </NavItem>
               <NavItem to="/ai-tools">
                 <Cpu className="h-4 w-4" /> AI Tools
               </NavItem>
@@ -74,6 +77,7 @@ import React, { useState } from 'react';
                 <NavItem to="/" onClick={closeMenu}>Home</NavItem>
                 <NavItem to="/reviews" onClick={closeMenu}>Reviews</NavItem>
                 <NavItem to="/deals" onClick={closeMenu}>Deals</NavItem>
+                <NavItem to="/marketplace" onClick={closeMenu}>Marketplace</NavItem>
                 <NavItem to="/ai-tools" onClick={closeMenu}>AI Tools</NavItem>
                 <NavItem to="/about" onClick={closeMenu}>About</NavItem>
               </nav>
