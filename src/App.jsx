@@ -6,6 +6,7 @@ import React from 'react';
     import ReviewsPage from '@/pages/ReviewsPage';
     import DealsPage from '@/pages/DealsPage';
     import MarketplacePage from '@/pages/MarketplacePage';
+    import HealthPage from '@/pages/HealthPage';
     import AiToolsPage from '@/pages/AiToolsPage';
     import AboutPage from '@/pages/AboutPage';
     import NotFoundPage from '@/pages/NotFoundPage';
@@ -22,6 +23,7 @@ import React from 'react';
                 <Route path="/reviews" element={<ReviewsPage />} />
                 <Route path="/deals" element={<DealsPage />} />
                 <Route path="/marketplace" element={<MarketplacePage />} />
+                <Route path="/marketplace/health" element={<HealthPage />} />
                 <Route path="/ai-tools" element={<AiToolsPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="*" element={<NotFoundPage />} />
