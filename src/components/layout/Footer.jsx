@@ -30,23 +30,34 @@ import React from 'react';
               <div>
                 <p className="font-semibold text-foreground mb-4">Quick Links</p>
                 <nav className="space-y-2 flex flex-col">
+                  <button onClick={handleFeatureClick} className="text-left text-sm text-muted-foreground hover:text-primary transition-colors">Resources</button>
+                  <button onClick={handleFeatureClick} className="text-left text-sm text-muted-foreground hover:text-primary transition-colors">Solutions</button>
                   <NavLink to="/reviews" className="text-sm text-muted-foreground hover:text-primary transition-colors">Reviews</NavLink>
                   <NavLink to="/deals" className="text-sm text-muted-foreground hover:text-primary transition-colors">Deals</NavLink>
+                  <NavLink to="/marketplace" className="text-sm text-muted-foreground hover:text-primary transition-colors">Marketplace</NavLink>
+                  <NavLink to="/ai-tools" className="text-sm text-muted-foreground hover:text-primary transition-colors">AI Tools</NavLink>
                   <NavLink to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">About Us</NavLink>
                 </nav>
               </div>
               <div>
-                <p className="font-semibold text-foreground mb-4">Legal</p>
+                <p className="font-semibold text-foreground mb-4">Support</p>
                 <nav className="space-y-2 flex flex-col">
+                  <button onClick={handleFeatureClick} className="text-left text-sm text-muted-foreground hover:text-primary transition-colors">Help Center</button>
+                  <button onClick={handleFeatureClick} className="text-left text-sm text-muted-foreground hover:text-primary transition-colors">Contact Us</button>
                   <button onClick={handleFeatureClick} className="text-left text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</button>
                   <button onClick={handleFeatureClick} className="text-left text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</button>
                 </nav>
               </div>
               <div>
-                <p className="font-semibold text-foreground mb-4">Connect</p>
-                <div className="flex space-x-4">
-                  <button onClick={handleFeatureClick} className="text-sm text-muted-foreground hover:text-primary transition-colors">Twitter</button>
-                  <button onClick={handleFeatureClick} className="text-sm text-muted-foreground hover:text-primary transition-colors">Facebook</button>
+                <p className="font-semibold text-foreground mb-4">Contact</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Email: support@1marketlive.com</p>
+                  <p className="text-sm text-muted-foreground">Phone: (123) 456-7890</p>
+                  <button onClick={handleFeatureClick} className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact Form</button>
+                  <div className="flex space-x-4 mt-4">
+                    <button onClick={handleFeatureClick} className="text-sm text-muted-foreground hover:text-primary transition-colors">Twitter</button>
+                    <button onClick={handleFeatureClick} className="text-sm text-muted-foreground hover:text-primary transition-colors">Facebook</button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -85,14 +85,75 @@ const MarketplacePage = () => {
         <section className="text-center py-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <ShoppingBag className="h-12 w-12 text-primary" />
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Marketplace</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Shop by Category</h1>
           </div>
           <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
-            Curated product bundles and exclusive deals from verified vendors.
+            Discover trending products across all major categories with AI-powered market intelligence and profit predictions.
           </p>
         </section>
 
         <section className="py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="bg-card rounded-xl p-6 shadow-lg border border-border hover:border-primary/50 transition-colors duration-300">
+              <div className="text-primary text-3xl mb-4">💻</div>
+              <h3 className="text-xl font-bold mb-2">Tech</h3>
+              <p className="text-muted-foreground text-sm mb-4">Smartphones, wearables, laptops, and cutting-edge gadgets</p>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-green-600 font-semibold">+15% Growth</span>
+                <span className="text-muted-foreground text-sm">12.3K Products</span>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" className="flex-1">Buy via Amazon</Button>
+                <Button size="sm" className="flex-1">Add to Cart</Button>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 shadow-lg border border-border hover:border-primary/50 transition-colors duration-300">
+              <div className="text-primary text-3xl mb-4">🏠</div>
+              <h3 className="text-xl font-bold mb-2">Home</h3>
+              <p className="text-muted-foreground text-sm mb-4">Smart home devices, decor, furniture, and kitchen appliances</p>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-green-600 font-semibold">+18% Growth</span>
+                <span className="text-muted-foreground text-sm">15.1K Products</span>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" className="flex-1">Buy via Amazon</Button>
+                <Button size="sm" className="flex-1">Add to Cart</Button>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 shadow-lg border border-border hover:border-primary/50 transition-colors duration-300">
+              <div className="text-primary text-3xl mb-4">👗</div>
+              <h3 className="text-xl font-bold mb-2">Fashion</h3>
+              <p className="text-muted-foreground text-sm mb-4">Trendy clothing, accessories, jewelry, and lifestyle products</p>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-green-600 font-semibold">+22% Growth</span>
+                <span className="text-muted-foreground text-sm">8.7K Products</span>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" className="flex-1">Buy via Amazon</Button>
+                <Button size="sm" className="flex-1">Add to Cart</Button>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 shadow-lg border border-border hover:border-primary/50 transition-colors duration-300">
+              <div className="text-primary text-3xl mb-4">🎮</div>
+              <h3 className="text-xl font-bold mb-2">Gadgets</h3>
+              <p className="text-muted-foreground text-sm mb-4">Gaming gear, innovative tech gadgets, and entertainment items</p>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-green-600 font-semibold">+28% Growth</span>
+                <span className="text-muted-foreground text-sm">4.2K Products</span>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" className="flex-1">Buy via Amazon</Button>
+                <Button size="sm" className="flex-1">Add to Cart</Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-8">
+          <h2 className="text-2xl font-bold mb-6">Featured Product Bundles</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {marketplaceItems.map(item => (
               <Card key={item.id} className="overflow-hidden h-full flex flex-col bg-card border-border hover:border-primary/50 transition-colors duration-300">
@@ -144,13 +205,13 @@ const MarketplacePage = () => {
 
         <section className="py-16 text-center">
           <div className="bg-secondary/30 rounded-lg p-8">
-            <h2 className="text-2xl font-bold mb-4">Become a Vendor</h2>
+            <h2 className="text-2xl font-bold mb-4">Join Our Affiliate Program</h2>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Join our marketplace and reach thousands of customers looking for quality products. 
-              We provide the platform, you provide the excellence.
+              Earn commissions by promoting our curated products. Access exclusive deals, 
+              tracking tools, and marketing materials to maximize your earnings.
             </p>
             <Button size="lg">
-              Apply to Sell
+              Join Affiliate Program
             </Button>
           </div>
         </section>

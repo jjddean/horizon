@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
     import { NavLink } from 'react-router-dom';
     import { motion } from 'framer-motion';
-    import { Zap, Menu, X, Gift, Star, Info, Cpu, ShoppingBag, ChevronDown, Heart } from 'lucide-react';
+    import { Zap, Menu, X, Gift, Star, Info, Cpu, ShoppingBag, ChevronDown, Heart, BookOpen, Settings } from 'lucide-react';
     import { Button } from '@/components/ui/button';
     import { useToast } from '@/components/ui/use-toast';
 
@@ -22,6 +22,8 @@ import React, { useState } from 'react';
     const Header = () => {
       const [isOpen, setIsOpen] = useState(false);
       const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false);
+      const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+      const [isSolutionsOpen, setIsSolutionsOpen] = useState(false);
       const { toast } = useToast();
 
       const toggleMenu = () => setIsOpen(!isOpen);
@@ -43,12 +45,90 @@ import React, { useState } from 'react';
               <span className="font-bold sm:inline-block text-lg">1MarketLive®</span>
             </NavLink>
             <nav className="hidden md:flex items-center gap-6 flex-1">
-              <NavItem to="/reviews">
-                <Star className="h-4 w-4" /> Reviews
-              </NavItem>
-              <NavItem to="/deals">
-                <Gift className="h-4 w-4" /> Deals
-              </NavItem>
+              <div className="relative group">
+                <button
+                  className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary text-muted-foreground"
+                  onMouseEnter={() => setIsResourcesOpen(true)}
+                  onMouseLeave={() => setIsResourcesOpen(false)}
+                >
+                  <BookOpen className="h-4 w-4" /> Resources
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+                {isResourcesOpen && (
+                  <div 
+                    className="absolute top-full left-0 mt-2 w-48 bg-background border border-border rounded-md shadow-lg z-50"
+                    onMouseEnter={() => setIsResourcesOpen(true)}
+                    onMouseLeave={() => setIsResourcesOpen(false)}
+                  >
+                    <button
+                      onClick={handleGetStartedClick}
+                      className="block w-full text-left px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      Guides & Tutorials
+                    </button>
+                    <button
+                      onClick={handleGetStartedClick}
+                      className="block w-full text-left px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      Blog
+                    </button>
+                    <button
+                      onClick={handleGetStartedClick}
+                      className="block w-full text-left px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      Free Tools
+                    </button>
+                    <button
+                      onClick={handleGetStartedClick}
+                      className="block w-full text-left px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      Community
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="relative group">
+                <button
+                  className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary text-muted-foreground"
+                  onMouseEnter={() => setIsSolutionsOpen(true)}
+                  onMouseLeave={() => setIsSolutionsOpen(false)}
+                >
+                  <Settings className="h-4 w-4" /> Solutions
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+                {isSolutionsOpen && (
+                  <div 
+                    className="absolute top-full left-0 mt-2 w-48 bg-background border border-border rounded-md shadow-lg z-50"
+                    onMouseEnter={() => setIsSolutionsOpen(true)}
+                    onMouseLeave={() => setIsSolutionsOpen(false)}
+                  >
+                    <button
+                      onClick={handleGetStartedClick}
+                      className="block w-full text-left px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      Platform Integrations
+                    </button>
+                    <button
+                      onClick={handleGetStartedClick}
+                      className="block w-full text-left px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      AI Automation
+                    </button>
+                    <NavLink
+                      to="/reviews"
+                      className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      Reviews
+                    </NavLink>
+                    <NavLink
+                      to="/deals"
+                      className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      Deals
+                    </NavLink>
+                  </div>
+                )}
+              </div>
               <div className="relative group">
                 <button
                   className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary text-muted-foreground"
@@ -69,7 +149,21 @@ import React, { useState } from 'react';
                       className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
                     >
                       <ShoppingBag className="inline h-4 w-4 mr-2" />
-                      All Products
+                      Shop by Category
+                    </NavLink>
+                    <NavLink
+                      to="/ai-tools"
+                      className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      <Cpu className="inline h-4 w-4 mr-2" />
+                      AI Tools
+                    </NavLink>
+                    <NavLink
+                      to="/deals"
+                      className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      <Gift className="inline h-4 w-4 mr-2" />
+                      Deals
                     </NavLink>
                     <NavLink
                       to="/marketplace/health"
@@ -78,12 +172,15 @@ import React, { useState } from 'react';
                       <Heart className="inline h-4 w-4 mr-2" />
                       Health & Wellness
                     </NavLink>
+                    <button
+                      onClick={handleGetStartedClick}
+                      className="block w-full text-left px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-colors"
+                    >
+                      Affiliate Program
+                    </button>
                   </div>
                 )}
               </div>
-              <NavItem to="/ai-tools">
-                <Cpu className="h-4 w-4" /> AI Tools
-              </NavItem>
               <NavItem to="/about">
                 <Info className="h-4 w-4" /> About
               </NavItem>
@@ -106,6 +203,8 @@ import React, { useState } from 'react';
             >
               <nav className="grid gap-4">
                 <NavItem to="/" onClick={closeMenu}>Home</NavItem>
+                <NavItem to="/resources" onClick={closeMenu}>Resources</NavItem>
+                <NavItem to="/solutions" onClick={closeMenu}>Solutions</NavItem>
                 <NavItem to="/reviews" onClick={closeMenu}>Reviews</NavItem>
                 <NavItem to="/deals" onClick={closeMenu}>Deals</NavItem>
                 <NavItem to="/marketplace" onClick={closeMenu}>Marketplace</NavItem>
