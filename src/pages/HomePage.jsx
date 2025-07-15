@@ -1,580 +1,944 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Zap, Tag, ShoppingCart, Bot, TrendingUp, Users, Star, ArrowRight, CheckCircle, Globe, HeartHandshake as Handshake, Link, Percent, Brain, BarChart3, Edit, Search, Mail, Share2, PieChart, Settings, ShoppingBag, Package, Monitor, Palette, Smartphone } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { Zap, Tag, ShoppingCart, Bot, TrendingUp, Users, Star, ArrowRight, CheckCircle, Globe, HeartHandshake as Handshake, Link, Percent, Brain, BarChart3, Edit, Search, Mail, Share2, PieChart, Settings, ShoppingBag, Package, Monitor, Palette, Smartphone, Sparkles, Rocket, Target, Layers, Cpu, Database, Workflow, Gauge, Shield, Infinity } from 'lucide-react';
 
 const HomePage = () => {
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [cursorVariant, setCursorVariant] = useState("default");
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  
+  // Parallax transforms
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+
+  // Mouse tracking for interactive cursor
+  useEffect(() => {
+    const mouseMove = (e) => {
+      setMousePosition({
+        x: e.clientX,
+        y: e.clientY
+      });
+    };
+
+    window.addEventListener("mousemove", mouseMove);
+    return () => window.removeEventListener("mousemove", mouseMove);
+  }, []);
+
+  // Animated text variants
+  const textVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.8,
+        ease: [0.6, -0.05, 0.01, 0.99]
+      }
+    })
   };
 
-  const staggerContainer = {
-    animate: {
+  // Stagger container
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.1,
+        delayChildren: 0.3
       }
     }
   };
 
+  // Card hover variants
+  const cardVariants = {
+    hidden: { opacity: 0, y: 60, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.6, -0.05, 0.01, 0.99]
+      }
+    },
+    hover: {
+      y: -10,
+      scale: 1.02,
+      boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)",
+      transition: {
+        duration: 0.3,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  // Floating animation
+  const floatingVariants = {
+    animate: {
+      y: [-10, 10, -10],
+      transition: {
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }
+    }
+  };
+
+  // Interactive cursor component
+  const Cursor = () => (
+    <motion.div
+      className="fixed top-0 left-0 w-6 h-6 bg-blue-500 rounded-full pointer-events-none z-50 mix-blend-difference"
+      animate={{
+        x: mousePosition.x - 12,
+        y: mousePosition.y - 12,
+        scale: cursorVariant === "hover" ? 2 : 1
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 500,
+        damping: 28
+      }}
+    />
+  );
+
+  // Animated counter component
+  const AnimatedCounter = ({ end, duration = 2 }) => {
+    const [count, setCount] = useState(0);
+    const ref = useRef(null);
+    const inView = useInView(ref);
+
+    useEffect(() => {
+      if (inView) {
+        let startTime;
+        const animate = (currentTime) => {
+          if (!startTime) startTime = currentTime;
+          const progress = Math.min((currentTime - startTime) / (duration * 1000), 1);
+          setCount(Math.floor(progress * end));
+          if (progress < 1) requestAnimationFrame(animate);
+        };
+        requestAnimationFrame(animate);
+      }
+    }, [inView, end, duration]);
+
+    return <span ref={ref}>{count}</span>;
+  };
+
+  // Morphing SVG component
+  const MorphingSVG = () => (
+    <motion.svg
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      className="absolute top-20 right-20 opacity-20"
+    >
+      <motion.path
+        d="M20,50 Q50,20 80,50 Q50,80 20,50"
+        fill="none"
+        stroke="url(#gradient)"
+        strokeWidth="2"
+        animate={{
+          d: [
+            "M20,50 Q50,20 80,50 Q50,80 20,50",
+            "M20,30 Q50,10 80,30 Q50,60 20,30",
+            "M20,50 Q50,20 80,50 Q50,80 20,50"
+          ]
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#3b82f6" />
+          <stop offset="100%" stopColor="#8b5cf6" />
+        </linearGradient>
+      </defs>
+    </motion.svg>
+  );
+
   return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 via-purple-900 to-gray-900 text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div className="min-h-screen bg-gray-900 text-white overflow-hidden" ref={containerRef}>
+      <Cursor />
+      
+      {/* Hero Section with Cinematic Intro */}
+      <motion.section 
+        className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900"
+        style={{ opacity, scale }}
+      >
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              1MarketLive: Your E-commerce Powerhouse
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-300 max-w-4xl mx-auto">
-              Shop top products and AI tools with seamless integrations, automation, and honest reviews.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-colors flex items-center gap-2"
+            className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.6, 0.3]
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.6, 0.3, 0.6]
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2
+            }}
+          />
+        </div>
+
+        <MorphingSVG />
+
+        <motion.div 
+          className="text-center z-10 max-w-6xl mx-auto px-4"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Kinetic Typography */}
+          <motion.div className="mb-8">
+            <motion.h1 
+              className="text-6xl md:text-8xl font-black mb-6 leading-tight"
+              variants={textVariants}
+              custom={0}
+            >
+              <motion.span 
+                className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                style={{
+                  backgroundSize: "200% 200%"
+                }}
               >
+                1MarketLive
+              </motion.span>
+            </motion.h1>
+            
+            <motion.div
+              variants={textVariants}
+              custom={1}
+              className="text-2xl md:text-4xl font-light text-gray-300 mb-4"
+            >
+              Your E-commerce{" "}
+              <motion.span
+                className="text-blue-400 font-bold"
+                animate={{
+                  scale: [1, 1.05, 1],
+                  color: ["#60a5fa", "#a78bfa", "#60a5fa"]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                Powerhouse
+              </motion.span>
+            </motion.div>
+          </motion.div>
+
+          <motion.p 
+            className="text-xl md:text-2xl mb-12 text-gray-400 max-w-4xl mx-auto leading-relaxed"
+            variants={textVariants}
+            custom={2}
+          >
+            A next-gen, AI-powered affiliate and dropshipping marketplace. 
+            Discover top-selling products, automate listings, and integrate with 
+            Amazon, Shopify, and more.
+          </motion.p>
+
+          {/* CTA Buttons with Advanced Hover Effects */}
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
+            variants={textVariants}
+            custom={3}
+          >
+            <motion.button
+              className="group relative bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold text-lg overflow-hidden"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onHoverStart={() => setCursorVariant("hover")}
+              onHoverEnd={() => setCursorVariant("default")}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "0%" }}
+                transition={{ duration: 0.3 }}
+              />
+              <span className="relative z-10 flex items-center gap-2">
                 <Zap className="w-5 h-5" />
                 Start Shopping
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-full font-semibold text-lg transition-colors flex items-center gap-2"
-              >
+              </span>
+            </motion.button>
+
+            <motion.button
+              className="group border-2 border-blue-400 text-blue-400 hover:text-white px-8 py-4 rounded-full font-semibold text-lg relative overflow-hidden"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onHoverStart={() => setCursorVariant("hover")}
+              onHoverEnd={() => setCursorVariant("default")}
+            >
+              <motion.div
+                className="absolute inset-0 bg-blue-400"
+                initial={{ scale: 0 }}
+                whileHover={{ scale: 1 }}
+                transition={{ duration: 0.3 }}
+                style={{ originX: 0.5, originY: 0.5 }}
+              />
+              <span className="relative z-10 flex items-center gap-2">
                 <Tag className="w-5 h-5" />
                 See Top Deals
-              </motion.button>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl font-bold mb-2">🌐</div>
-                <div className="text-sm text-gray-300">All Product Genres</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold mb-2">🤝</div>
-                <div className="text-sm text-gray-300">Platform Integration</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold mb-2">🔗</div>
-                <div className="text-sm text-gray-300">Affiliate & Dropship</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold mb-2">🤖</div>
-                <div className="text-sm text-gray-300">AI Automation</div>
-              </div>
-            </div>
+              </span>
+            </motion.button>
+          </motion.div>
+
+          {/* Feature Icons with Floating Animation */}
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+            variants={containerVariants}
+          >
+            {[
+              { icon: "🌐", text: "All Product Genres" },
+              { icon: "🤝", text: "Platform Integration" },
+              { icon: "🔗", text: "Affiliate & Dropship" },
+              { icon: "🤖", text: "AI Automation" }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                className="text-center"
+                variants={floatingVariants}
+                animate="animate"
+                style={{ animationDelay: `${index * 0.5}s` }}
+              >
+                <motion.div 
+                  className="text-4xl mb-3"
+                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  {item.icon}
+                </motion.div>
+                <div className="text-sm text-gray-400">{item.text}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <div className="w-6 h-10 border-2 border-blue-400 rounded-full flex justify-center">
+            <motion.div
+              className="w-1 h-3 bg-blue-400 rounded-full mt-2"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </div>
+        </motion.div>
+      </motion.section>
+
+      {/* Stats Section with Animated Counters */}
+      <motion.section 
+        className="py-20 bg-gray-800/50 backdrop-blur-sm"
+        style={{ y: y1 }}
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {[
+              { number: 50000, suffix: "+", label: "Active Users" },
+              { number: 1000000, suffix: "+", label: "Products Listed" },
+              { number: 25, suffix: "+", label: "Platform Integrations" },
+              { number: 99, suffix: "%", label: "Uptime Guarantee" }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                className="p-6"
+              >
+                <motion.div 
+                  className="text-4xl md:text-5xl font-bold text-blue-400 mb-2"
+                  whileHover={{ scale: 1.1 }}
+                >
+                  <AnimatedCounter end={stat.number} />
+                  {stat.suffix}
+                </motion.div>
+                <div className="text-gray-400">{stat.label}</div>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Your Complete AI Business Partner Section */}
-      <section className="py-20 px-4 bg-gray-800">
+      {/* AI Business Partner Section with Advanced Animations */}
+      <motion.section 
+        className="py-20 px-4 bg-gray-900"
+        style={{ y: y2 }}
+      >
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
             className="text-center mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Your Complete <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">AI Business Partner</span>
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              From product discovery to automated operations, our AI handles everything so you can focus on growing your business.
+            <motion.h2 
+              className="text-4xl md:text-6xl font-bold mb-6"
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            >
+              Your Complete{" "}
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                AI Business Partner
+              </span>
+            </motion.h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              From product discovery to automated operations, our AI handles everything 
+              so you can focus on growing your business.
             </p>
           </motion.div>
 
           <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
           >
-            <motion.div variants={fadeInUp} className="bg-gray-700 rounded-2xl p-8 hover:bg-gray-600 transition-colors">
-              <div className="text-blue-400 text-4xl mb-6">
-                <ShoppingCart className="w-12 h-12" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Smart Marketplace</h3>
-              <p className="text-gray-300 mb-6">AI-curated product listings across all top-selling genres with real-time market analysis and trend predictions.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>• Electronics & Tech</li>
-                <li>• Fashion & Lifestyle</li>
-                <li>• Home & Garden</li>
-                <li>• Health & Beauty</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-700 rounded-2xl p-8 hover:bg-gray-600 transition-colors">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Link className="w-12 h-12" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Platform Integrations</h3>
-              <p className="text-gray-300 mb-6">Seamlessly connect with Shopify, Amazon, eBay, and 50+ other platforms with one-click setup.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>• Shopify Integration</li>
-                <li>• Amazon FBA Support</li>
-                <li>• eBay & Etsy Connect</li>
-                <li>• WooCommerce Sync</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-700 rounded-2xl p-8 hover:bg-gray-600 transition-colors">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Percent className="w-12 h-12" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Affiliate & Dropshipping</h3>
-              <p className="text-gray-300 mb-6">Automated affiliate marketing and dropshipping with intelligent profit optimization and supplier management.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>• Commission Tracking</li>
-                <li>• Supplier Network</li>
-                <li>• Profit Optimization</li>
-                <li>• Order Automation</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-700 rounded-2xl p-8 hover:bg-gray-600 transition-colors">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Bot className="w-12 h-12" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">AI Listing Automation</h3>
-              <p className="text-gray-300 mb-6">Automatically generate product listings, optimize SEO, and update inventory across all platforms.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>• Auto Product Descriptions</li>
-                <li>• SEO Optimization</li>
-                <li>• Price Monitoring</li>
-                <li>• Inventory Management</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-700 rounded-2xl p-8 hover:bg-gray-600 transition-colors">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Brain className="w-12 h-12" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">AI Productivity Tools</h3>
-              <p className="text-gray-300 mb-6">Comprehensive suite of AI tools for content creation, data analysis, and workflow automation.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>• Content Generator</li>
-                <li>• Data Analytics</li>
-                <li>• Email Automation</li>
-                <li>• Social Media Tools</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-700 rounded-2xl p-8 hover:bg-gray-600 transition-colors">
-              <div className="text-blue-400 text-4xl mb-6">
-                <BarChart3 className="w-12 h-12" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Advanced Analytics</h3>
-              <p className="text-gray-300 mb-6">Real-time business insights with predictive analytics and performance optimization recommendations.</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>• Sales Forecasting</li>
-                <li>• Customer Insights</li>
-                <li>• ROI Tracking</li>
-                <li>• Performance Reports</li>
-              </ul>
-            </motion.div>
+            {[
+              {
+                icon: ShoppingCart,
+                title: "Smart Marketplace",
+                description: "AI-curated product listings across all top-selling genres with real-time market analysis and trend predictions.",
+                features: ["Electronics & Tech", "Fashion & Lifestyle", "Home & Garden", "Health & Beauty"],
+                color: "from-blue-500 to-cyan-500"
+              },
+              {
+                icon: Link,
+                title: "Platform Integrations",
+                description: "Seamlessly connect with Shopify, Amazon, eBay, and 50+ other platforms with one-click setup.",
+                features: ["Shopify Integration", "Amazon FBA Support", "eBay & Etsy Connect", "WooCommerce Sync"],
+                color: "from-purple-500 to-pink-500"
+              },
+              {
+                icon: Percent,
+                title: "Affiliate & Dropshipping",
+                description: "Automated affiliate marketing and dropshipping with intelligent profit optimization and supplier management.",
+                features: ["Commission Tracking", "Supplier Network", "Profit Optimization", "Order Automation"],
+                color: "from-green-500 to-emerald-500"
+              },
+              {
+                icon: Bot,
+                title: "AI Listing Automation",
+                description: "Automatically generate product listings, optimize SEO, and update inventory across all platforms.",
+                features: ["Auto Product Descriptions", "SEO Optimization", "Price Monitoring", "Inventory Management"],
+                color: "from-orange-500 to-red-500"
+              },
+              {
+                icon: Brain,
+                title: "AI Productivity Tools",
+                description: "Comprehensive suite of AI tools for content creation, data analysis, and workflow automation.",
+                features: ["Content Generator", "Data Analytics", "Email Automation", "Social Media Tools"],
+                color: "from-indigo-500 to-purple-500"
+              },
+              {
+                icon: BarChart3,
+                title: "Advanced Analytics",
+                description: "Real-time business insights with predictive analytics and performance optimization recommendations.",
+                features: ["Sales Forecasting", "Customer Insights", "ROI Tracking", "Performance Reports"],
+                color: "from-teal-500 to-blue-500"
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                whileHover="hover"
+                className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 overflow-hidden"
+                onHoverStart={() => setCursorVariant("hover")}
+                onHoverEnd={() => setCursorVariant("default")}
+              >
+                {/* Gradient overlay on hover */}
+                <motion.div
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
+                />
+                
+                <motion.div
+                  className={`text-4xl mb-6 bg-gradient-to-r ${feature.color} bg-clip-text text-transparent`}
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <feature.icon className="w-12 h-12" />
+                </motion.div>
+                
+                <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-blue-300 transition-colors">
+                  {feature.title}
+                </h3>
+                
+                <p className="text-gray-400 mb-6 group-hover:text-gray-300 transition-colors">
+                  {feature.description}
+                </p>
+                
+                <ul className="space-y-2">
+                  {feature.features.map((item, idx) => (
+                    <motion.li
+                      key={idx}
+                      className="text-sm text-gray-500 flex items-center gap-2"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                    >
+                      <motion.div
+                        className="w-1.5 h-1.5 bg-blue-400 rounded-full"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
+                      />
+                      {item}
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Shop by Category Section */}
-      <section className="py-20 px-4 bg-gray-900">
+      {/* Platform Integrations with Morphing Cards */}
+      <motion.section className="py-20 px-4 bg-gray-800/30">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
             className="text-center mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Top-Selling Product Genres</span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Seamless{" "}
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Platform Integrations
+              </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Discover trending products across all major categories with AI-powered market intelligence and profit predictions.
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Connect with all major e-commerce platforms and marketplaces with 
+              one-click integration and automated synchronization.
             </p>
           </motion.div>
 
           <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-16"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
           >
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-purple-400 text-3xl mb-4">💻</div>
-              <h3 className="text-xl font-bold text-white mb-2">Electronics & Tech</h3>
-              <p className="text-gray-400 text-sm mb-4">Latest gadgets, smartphones, laptops, and tech accessories</p>
-              <div className="flex justify-between items-center">
-                <span className="text-green-400 font-semibold">+15% Growth</span>
-                <span className="text-gray-500 text-sm">12.3K Products</span>
-              </div>
-              <div className="mt-4 flex space-x-2">
-                <button className="text-blue-400 hover:text-blue-300 text-sm">Buy via Amazon</button>
-                <button className="text-blue-400 hover:text-blue-300 text-sm">Add to Cart</button>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-purple-400 text-3xl mb-4">🏠</div>
-              <h3 className="text-xl font-bold text-white mb-2">Home & Garden</h3>
-              <p className="text-gray-400 text-sm mb-4">Smart home devices, furniture, and garden essentials</p>
-              <div className="flex justify-between items-center">
-                <span className="text-green-400 font-semibold">+18% Growth</span>
-                <span className="text-gray-500 text-sm">15.1K Products</span>
-              </div>
-              <div className="mt-4 flex space-x-2">
-                <button className="text-blue-400 hover:text-blue-300 text-sm">Buy via Amazon</button>
-                <button className="text-blue-400 hover:text-blue-300 text-sm">Add to Cart</button>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-purple-400 text-3xl mb-4">👗</div>
-              <h3 className="text-xl font-bold text-white mb-2">Fashion & Lifestyle</h3>
-              <p className="text-gray-400 text-sm mb-4">Trendy clothing, accessories, and lifestyle products</p>
-              <div className="flex justify-between items-center">
-                <span className="text-green-400 font-semibold">+22% Growth</span>
-                <span className="text-gray-500 text-sm">8.7K Products</span>
-              </div>
-              <div className="mt-4 flex space-x-2">
-                <button className="text-blue-400 hover:text-blue-300 text-sm">Buy via Amazon</button>
-                <button className="text-blue-400 hover:text-blue-300 text-sm">Add to Cart</button>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-purple-400 text-3xl mb-4">🎮</div>
-              <h3 className="text-xl font-bold text-white mb-2">Gaming & Entertainment</h3>
-              <p className="text-gray-400 text-sm mb-4">Video games, gaming accessories, and entertainment</p>
-              <div className="flex justify-between items-center">
-                <span className="text-green-400 font-semibold">+28% Growth</span>
-                <span className="text-gray-500 text-sm">4.2K Products</span>
-              </div>
-              <div className="mt-4 flex space-x-2">
-                <button className="text-blue-400 hover:text-blue-300 text-sm">Buy via Amazon</button>
-                <button className="text-blue-400 hover:text-blue-300 text-sm">Add to Cart</button>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Platform Integrations Section */}
-      <section className="py-20 px-4 bg-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Seamless <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Platform Integrations</span>
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Connect with all major e-commerce platforms and marketplaces with one-click integration and automated synchronization.
-            </p>
+            {[
+              { icon: "🛍️", name: "Shopify", desc: "Full Integration", color: "from-green-500 to-emerald-500" },
+              { icon: "📦", name: "Amazon", desc: "FBA Support", color: "from-orange-500 to-yellow-500" },
+              { icon: "💻", name: "eBay", desc: "Auto Listings", color: "from-blue-500 to-cyan-500" },
+              { icon: "🔗", name: "WooCommerce", desc: "WordPress", color: "from-purple-500 to-pink-500" },
+              { icon: "🎨", name: "Etsy", desc: "Creative Market", color: "from-pink-500 to-rose-500" },
+              { icon: "📱", name: "Facebook", desc: "Social Commerce", color: "from-indigo-500 to-blue-500" }
+            ].map((platform, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                whileHover={{
+                  scale: 1.05,
+                  rotateY: 10,
+                  boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)"
+                }}
+                className={`bg-gradient-to-br ${platform.color} rounded-xl p-6 text-center shadow-lg border border-white/10`}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <motion.div 
+                  className="text-3xl mb-3"
+                  animate={{ rotateY: [0, 360] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                >
+                  {platform.icon}
+                </motion.div>
+                <h3 className="font-bold text-white">{platform.name}</h3>
+                <p className="text-xs text-white/80 mt-1">{platform.desc}</p>
+              </motion.div>
+            ))}
           </motion.div>
 
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-16"
-          >
-            <motion.div variants={fadeInUp} className="bg-green-900/20 rounded-xl p-6 text-center hover:bg-green-900/30 transition-colors border border-green-700">
-              <div className="text-green-400 text-3xl mb-3">🛍️</div>
-              <h3 className="font-bold text-green-300">Shopify</h3>
-              <p className="text-xs text-green-400 mt-1">Full Integration</p>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-orange-900/20 rounded-xl p-6 text-center hover:bg-orange-900/30 transition-colors border border-orange-700">
-              <div className="text-orange-400 text-3xl mb-3">📦</div>
-              <h3 className="font-bold text-orange-300">Amazon</h3>
-              <p className="text-xs text-orange-400 mt-1">FBA Support</p>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-blue-900/20 rounded-xl p-6 text-center hover:bg-blue-900/30 transition-colors border border-blue-700">
-              <div className="text-blue-400 text-3xl mb-3">💻</div>
-              <h3 className="font-bold text-blue-300">eBay</h3>
-              <p className="text-xs text-blue-400 mt-1">Auto Listings</p>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-purple-900/20 rounded-xl p-6 text-center hover:bg-purple-900/30 transition-colors border border-purple-700">
-              <div className="text-purple-400 text-3xl mb-3">🔗</div>
-              <h3 className="font-bold text-purple-300">WooCommerce</h3>
-              <p className="text-xs text-purple-400 mt-1">WordPress</p>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-pink-900/20 rounded-xl p-6 text-center hover:bg-pink-900/30 transition-colors border border-pink-700">
-              <div className="text-pink-400 text-3xl mb-3">🎨</div>
-              <h3 className="font-bold text-pink-300">Etsy</h3>
-              <p className="text-xs text-pink-400 mt-1">Creative Market</p>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-indigo-900/20 rounded-xl p-6 text-center hover:bg-indigo-900/30 transition-colors border border-indigo-700">
-              <div className="text-indigo-400 text-3xl mb-3">📱</div>
-              <h3 className="font-bold text-indigo-300">Facebook</h3>
-              <p className="text-xs text-indigo-400 mt-1">Social Commerce</p>
-            </motion.div>
-          </motion.div>
-
+          {/* Dual Hub Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
               className="space-y-6"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold text-white">🔗 Affiliate Marketing Hub</h3>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-purple-900/30 rounded-full flex items-center justify-center">
-                    <Percent className="w-5 h-5 text-purple-400" />
-                  </div>
+              <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                <motion.span
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                >
+                  🔗
+                </motion.span>
+                Affiliate Marketing Hub
+              </h3>
+              
+              {[
+                { icon: Percent, title: "Commission Tracking", desc: "Real-time tracking of affiliate commissions and performance metrics" },
+                { icon: Link, title: "Link Management", desc: "Automated affiliate link generation and optimization" },
+                { icon: BarChart3, title: "Performance Analytics", desc: "Advanced analytics for affiliate campaign optimization" }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="flex items-center space-x-4"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.div
+                    className="w-12 h-12 bg-purple-900/30 rounded-full flex items-center justify-center"
+                    whileHover={{ scale: 1.1, backgroundColor: "rgba(147, 51, 234, 0.5)" }}
+                  >
+                    <item.icon className="w-5 h-5 text-purple-400" />
+                  </motion.div>
                   <div>
-                    <h4 className="font-semibold text-white">Commission Tracking</h4>
-                    <p className="text-sm text-gray-400">Real-time tracking of affiliate commissions and performance metrics</p>
+                    <h4 className="font-semibold text-white">{item.title}</h4>
+                    <p className="text-sm text-gray-400">{item.desc}</p>
                   </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-purple-900/30 rounded-full flex items-center justify-center">
-                    <Link className="w-5 h-5 text-purple-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white">Link Management</h4>
-                    <p className="text-sm text-gray-400">Automated affiliate link generation and optimization</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-purple-900/30 rounded-full flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-purple-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white">Performance Analytics</h4>
-                    <p className="text-sm text-gray-400">Advanced analytics for affiliate campaign optimization</p>
-                  </div>
-                </div>
-              </div>
+                </motion.div>
+              ))}
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
               className="space-y-6"
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold text-white">📦 Dropshipping Automation</h3>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-blue-900/30 rounded-full flex items-center justify-center">
-                    <Package className="w-5 h-5 text-blue-400" />
-                  </div>
+              <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                <motion.span
+                  animate={{ rotate: [0, -360] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                >
+                  📦
+                </motion.span>
+                Dropshipping Automation
+              </h3>
+              
+              {[
+                { icon: Package, title: "Supplier Network", desc: "Connect with verified suppliers and automate order fulfillment" },
+                { icon: Database, title: "Inventory Sync", desc: "Real-time inventory synchronization across all platforms" },
+                { icon: TrendingUp, title: "Profit Optimization", desc: "AI-powered pricing strategies for maximum profitability" }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="flex items-center space-x-4"
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.div
+                    className="w-12 h-12 bg-blue-900/30 rounded-full flex items-center justify-center"
+                    whileHover={{ scale: 1.1, backgroundColor: "rgba(59, 130, 246, 0.5)" }}
+                  >
+                    <item.icon className="w-5 h-5 text-blue-400" />
+                  </motion.div>
                   <div>
-                    <h4 className="font-semibold text-white">Supplier Network</h4>
-                    <p className="text-sm text-gray-400">Connect with verified suppliers and automate order fulfillment</p>
+                    <h4 className="font-semibold text-white">{item.title}</h4>
+                    <p className="text-sm text-gray-400">{item.desc}</p>
                   </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-blue-900/30 rounded-full flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white">Inventory Sync</h4>
-                    <p className="text-sm text-gray-400">Real-time inventory synchronization across all platforms</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-blue-900/30 rounded-full flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white">Profit Optimization</h4>
-                    <p className="text-sm text-gray-400">AI-powered pricing strategies for maximum profitability</p>
-                  </div>
-                </div>
-              </div>
+                </motion.div>
+              ))}
             </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* AI Tools & Automation Section */}
-      <section className="py-20 px-4 bg-gray-900">
+      {/* AI Tools Section with Liquid Morphing Effects */}
+      <motion.section className="py-20 px-4 bg-gray-900">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
             className="text-center mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">AI-Powered Business Tools</span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                AI-Powered Business Tools
+              </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Comprehensive suite of AI tools designed to automate your workflow and boost productivity across all business operations.
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Comprehensive suite of AI tools designed to automate your workflow 
+              and boost productivity across all business operations.
             </p>
           </motion.div>
 
           <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
           >
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-2xl p-8 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Edit className="w-12 h-12" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Content Generator</h3>
-              <p className="text-gray-300 mb-4">AI-powered content creation for product descriptions, blog posts, and marketing materials.</p>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Product descriptions</li>
-                <li>• SEO-optimized content</li>
-                <li>• Marketing copy</li>
-                <li>• Social media posts</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-2xl p-8 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Search className="w-12 h-12" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">SEO Optimizer</h3>
-              <p className="text-gray-300 mb-4">Automated SEO optimization with keyword research, meta tags, and content optimization.</p>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Keyword research</li>
-                <li>• Meta tag generation</li>
-                <li>• Content optimization</li>
-                <li>• Ranking tracking</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-2xl p-8 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Mail className="w-12 h-12" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Email Marketing</h3>
-              <p className="text-gray-300 mb-4">Automated email campaigns with personalization and performance tracking.</p>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Campaign automation</li>
-                <li>• Personalization</li>
-                <li>• A/B testing</li>
-                <li>• Performance analytics</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-2xl p-8 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Share2 className="w-12 h-12" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Social Media Manager</h3>
-              <p className="text-gray-300 mb-4">Automated social media posting and engagement across all major platforms.</p>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Multi-platform posting</li>
-                <li>• Content scheduling</li>
-                <li>• Engagement tracking</li>
-                <li>• Hashtag optimization</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-2xl p-8 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-blue-400 text-4xl mb-6">
-                <PieChart className="w-12 h-12" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Data Analytics</h3>
-              <p className="text-gray-300 mb-4">Advanced analytics and insights with predictive modeling and trend analysis.</p>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Sales forecasting</li>
-                <li>• Customer insights</li>
-                <li>• Trend analysis</li>
-                <li>• Performance metrics</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gray-800 rounded-2xl p-8 hover:bg-gray-700 transition-colors border border-gray-700">
-              <div className="text-blue-400 text-4xl mb-6">
-                <Settings className="w-12 h-12" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Workflow Automation</h3>
-              <p className="text-gray-300 mb-4">Complete workflow automation with custom triggers and actions.</p>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Custom workflows</li>
-                <li>• Trigger automation</li>
-                <li>• Task scheduling</li>
-                <li>• Process optimization</li>
-              </ul>
-            </motion.div>
+            {[
+              {
+                icon: Edit,
+                title: "Content Generator",
+                description: "AI-powered content creation for product descriptions, blog posts, and marketing materials.",
+                features: ["Product descriptions", "SEO-optimized content", "Marketing copy", "Social media posts"],
+                color: "from-emerald-500 to-teal-500"
+              },
+              {
+                icon: Search,
+                title: "SEO Optimizer",
+                description: "Automated SEO optimization with keyword research, meta tags, and content optimization.",
+                features: ["Keyword research", "Meta tag generation", "Content optimization", "Ranking tracking"],
+                color: "from-blue-500 to-indigo-500"
+              },
+              {
+                icon: Mail,
+                title: "Email Marketing",
+                description: "Automated email campaigns with personalization and performance tracking.",
+                features: ["Campaign automation", "Personalization", "A/B testing", "Performance analytics"],
+                color: "from-purple-500 to-pink-500"
+              },
+              {
+                icon: Share2,
+                title: "Social Media Manager",
+                description: "Automated social media posting and engagement across all major platforms.",
+                features: ["Multi-platform posting", "Content scheduling", "Engagement tracking", "Hashtag optimization"],
+                color: "from-orange-500 to-red-500"
+              },
+              {
+                icon: PieChart,
+                title: "Data Analytics",
+                description: "Advanced analytics and insights with predictive modeling and trend analysis.",
+                features: ["Sales forecasting", "Customer insights", "Trend analysis", "Performance metrics"],
+                color: "from-cyan-500 to-blue-500"
+              },
+              {
+                icon: Settings,
+                title: "Workflow Automation",
+                description: "Complete workflow automation with custom triggers and actions.",
+                features: ["Custom workflows", "Trigger automation", "Task scheduling", "Process optimization"],
+                color: "from-violet-500 to-purple-500"
+              }
+            ].map((tool, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                whileHover={{
+                  scale: 1.02,
+                  rotateX: 5,
+                  boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)"
+                }}
+                className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 overflow-hidden"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                {/* Liquid morphing background */}
+                <motion.div
+                  className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-10`}
+                  animate={{
+                    borderRadius: ["20px", "40px 20px", "20px 40px", "20px"]
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                
+                <motion.div
+                  className={`text-4xl mb-6 bg-gradient-to-r ${tool.color} bg-clip-text text-transparent`}
+                  whileHover={{ 
+                    scale: 1.1, 
+                    rotate: [0, 5, -5, 0],
+                    transition: { duration: 0.5 }
+                  }}
+                >
+                  <tool.icon className="w-12 h-12" />
+                </motion.div>
+                
+                <h3 className="text-xl font-bold mb-4 text-white group-hover:text-blue-300 transition-colors">
+                  {tool.title}
+                </h3>
+                
+                <p className="text-gray-400 mb-4 group-hover:text-gray-300 transition-colors">
+                  {tool.description}
+                </p>
+                
+                <ul className="space-y-1">
+                  {tool.features.map((feature, idx) => (
+                    <motion.li
+                      key={idx}
+                      className="text-sm text-gray-500 flex items-center gap-2"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                    >
+                      <motion.div
+                        className="w-1.5 h-1.5 bg-blue-400 rounded-full"
+                        animate={{ 
+                          scale: [1, 1.3, 1],
+                          opacity: [0.5, 1, 0.5]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          repeat: Infinity, 
+                          delay: idx * 0.3 
+                        }}
+                      />
+                      {feature}
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Exclusive Deals Section */}
-      <section className="py-20 px-4 bg-gray-800">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
+      {/* Final CTA with Particle Effects */}
+      <motion.section 
+        className="relative py-20 px-4 bg-gradient-to-br from-blue-900 via-purple-900 to-gray-900 overflow-hidden"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        viewport={{ once: true }}
+      >
+        {/* Animated particles */}
+        <div className="absolute inset-0">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-blue-400 rounded-full opacity-30"
+              animate={{
+                x: [Math.random() * window.innerWidth, Math.random() * window.innerWidth],
+                y: [Math.random() * window.innerHeight, Math.random() * window.innerHeight],
+              }}
+              transition={{
+                duration: Math.random() * 10 + 10,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              style={{
+                left: Math.random() * 100 + "%",
+                top: Math.random() * 100 + "%"
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative max-w-4xl mx-auto text-center z-10">
+          <motion.h2 
+            className="text-4xl md:text-6xl font-bold mb-6 text-white"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            Ready to Transform Your Business?
+          </motion.h2>
+          
+          <motion.p 
+            className="text-xl mb-8 text-purple-100 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Exclusive <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Deals</span>
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Save big on trending products and premium AI tools with our curated deals.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            Join thousands of successful entrepreneurs who have already revolutionized 
+            their e-commerce operations with our AI-powered platform.
+          </motion.p>
+          
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
           >
-            <motion.div variants={fadeInUp} className="bg-gradient-to-r from-red-900/20 to-orange-900/20 rounded-xl p-8 border border-red-700">
-              <div className="flex items-center justify-between mb-4">
-                <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">50% OFF</span>
-                <span className="text-gray-400 text-sm">Limited Time</span>
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Tech Products Flash Sale</h3>
-              <p className="text-gray-300 mb-6">Shop trending electronics, gadgets, and smart devices at unbeatable prices.</p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
-              >
-                <Tag className="w-4 h-4" />
-                Claim Deal
-              </motion.button>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl p-8 border border-blue-700">
-              <div className="flex items-center justify-between mb-4">
-                <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">FREE TRIAL</span>
-                <span className="text-gray-400 text-sm">7 Days</span>
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Premium AI Tools</h3>
-              <p className="text-gray-300 mb-6">Try our complete suite of AI automation tools risk-free for a full week.</p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
-              >
-                <Bot className="w-4 h-4" />
+            <motion.button
+              className="bg-white text-purple-600 px-8 py-4 rounded-full font-semibold text-lg relative overflow-hidden group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "0%" }}
+                transition={{ duration: 0.3 }}
+              />
+              <span className="relative z-10 group-hover:text-white transition-colors">
                 Start Free Trial
-              </motion.button>
-            </motion.div>
+              </span>
+            </motion.button>
+            
+            <motion.button
+              className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-purple-600 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Request Demo
+            </motion.button>
+          </motion.div>
+          
+          <motion.div 
+            className="flex justify-center items-center space-x-8 text-purple-200"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <div className="flex items-center">
+              <CheckCircle className="mr-2 w-5 h-5" />
+              <span>No credit card required</span>
+            </div>
+            <div className="flex items-center">
+              <Shield className="mr-2 w-5 h-5" />
+              <span>30-day money-back guarantee</span>
+            </div>
           </motion.div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 };
