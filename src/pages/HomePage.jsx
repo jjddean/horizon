@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Tag, ShoppingCart, Bot, TrendingUp, Users, Star, ArrowRight, CheckCircle, Globe, Handshake, Link, Percent, Brain, BarChart3, Edit, Search, Mail, Share2, PieChart, Settings, ShoppingBag, Package, Monitor, Palette, Smartphone } from 'lucide-react';
+import { Zap, Tag, ShoppingCart, Bot, TrendingUp, Users, Star, ArrowRight, CheckCircle, Globe, HeartHandshake as Handshake, Link, Percent, Brain, BarChart3, Edit, Search, Mail, Share2, PieChart, Settings, ShoppingBag, Package, Monitor, Palette, Smartphone } from 'lucide-react';
 
 const HomePage = () => {
   const fadeInUp = {
