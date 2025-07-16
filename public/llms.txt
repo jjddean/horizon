@@ -1,0 +1,8 @@
+## Pages
+- [404 - Page Not Found](/notfound): The page you were looking for could not be found.
+- [About Us - 1MarketLive](/about): Learn about the mission of 1MarketLive: to provide transparent, honest, and valuable recommendations to help consumers.
+- [Exclusive Deals - 1MarketLive](/deals): Don
+- [Health & Wellness Tools - 1MarketLive](/health): Discover AI-powered health and wellness tools for metabolism tracking, sleep optimization, nutrition coaching, and mental health support.
+- [Marketplace - 1MarketLive](/marketplace): Discover curated product bundles and exclusive marketplace deals. Shop verified vendors and get the best value for your money.
+- [Product Reviews - 1MarketLive](/reviews): Find in-depth, honest reviews for the latest tech gadgets, home goods, and more. Make an informed decision with our expert analysis.
+- [Top AI Tools - 1MarketLive](/aitools): Discover the best AI tools for content creation, SEO, video generation, and more. Compare features and find the right tool for your needs.
