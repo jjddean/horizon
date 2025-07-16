@@ -4,17 +4,15 @@ import { Zap, Tag, ShoppingCart, Bot, TrendingUp, Users, Star, ArrowRight, Check
 
 const HomePage = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [cursorVariant, setCursorVariant] = useState("default");
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll();
   
-  // Parallax transforms
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+  // Subtle parallax transforms
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.8]);
 
-  // Mouse tracking for interactive cursor
+  // Refined mouse tracking
   useEffect(() => {
     const mouseMove = (e) => {
       setMousePosition({
@@ -27,48 +25,44 @@ const HomePage = () => {
     return () => window.removeEventListener("mousemove", mouseMove);
   }, []);
 
-  // Animated text variants
-  const textVariants = {
-    hidden: { opacity: 0, y: 50 },
+  // Refined animation variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
     visible: (i) => ({
       opacity: 1,
       y: 0,
       transition: {
         delay: i * 0.1,
-        duration: 0.8,
-        ease: [0.6, -0.05, 0.01, 0.99]
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94]
       }
     })
   };
 
-  // Stagger container
-  const containerVariants = {
+  const staggerContainer = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3
+        staggerChildren: 0.08,
+        delayChildren: 0.2
       }
     }
   };
 
-  // Card hover variants
-  const cardVariants = {
-    hidden: { opacity: 0, y: 60, scale: 0.9 },
+  // Refined card hover
+  const cardHover = {
+    hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
-      scale: 1,
       transition: {
-        duration: 0.6,
-        ease: [0.6, -0.05, 0.01, 0.99]
+        duration: 0.5,
+        ease: [0.25, 0.46, 0.45, 0.94]
       }
     },
     hover: {
-      y: -10,
-      scale: 1.02,
-      boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)",
+      y: -8,
       transition: {
         duration: 0.3,
         ease: "easeOut"
@@ -76,34 +70,17 @@ const HomePage = () => {
     }
   };
 
-  // Floating animation
-  const floatingVariants = {
+  // Subtle floating animation
+  const subtleFloat = {
     animate: {
-      y: [-10, 10, -10],
+      y: [-5, 5, -5],
       transition: {
-        duration: 3,
+        duration: 4,
         repeat: Infinity,
         ease: "easeInOut"
       }
     }
   };
-
-  // Interactive cursor component
-  const Cursor = () => (
-    <motion.div
-      className="fixed top-0 left-0 w-6 h-6 bg-blue-500 rounded-full pointer-events-none z-50 mix-blend-difference"
-      animate={{
-        x: mousePosition.x - 12,
-        y: mousePosition.y - 12,
-        scale: cursorVariant === "hover" ? 2 : 1
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 500,
-        damping: 28
-      }}
-    />
-  );
 
   // Animated counter component
   const AnimatedCounter = ({ end, duration = 2 }) => {
@@ -127,92 +104,58 @@ const HomePage = () => {
     return <span ref={ref}>{count}</span>;
   };
 
-  // Morphing SVG component
-  const MorphingSVG = () => (
-    <motion.svg
-      width="100"
-      height="100"
-      viewBox="0 0 100 100"
-      className="absolute top-20 right-20 opacity-20"
-    >
-      <motion.path
-        d="M20,50 Q50,20 80,50 Q50,80 20,50"
-        fill="none"
-        stroke="url(#gradient)"
-        strokeWidth="2"
+  // Refined background pattern
+  const BackgroundPattern = () => (
+    <div className="absolute inset-0 overflow-hidden">
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"
         animate={{
-          d: [
-            "M20,50 Q50,20 80,50 Q50,80 20,50",
-            "M20,30 Q50,10 80,30 Q50,60 20,30",
-            "M20,50 Q50,20 80,50 Q50,80 20,50"
-          ]
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.5, 0.3]
         }}
         transition={{
-          duration: 4,
+          duration: 8,
           repeat: Infinity,
           ease: "easeInOut"
         }}
       />
-      <defs>
-        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#3b82f6" />
-          <stop offset="100%" stopColor="#8b5cf6" />
-        </linearGradient>
-      </defs>
-    </motion.svg>
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl"
+        animate={{
+          scale: [1.1, 1, 1.1],
+          opacity: [0.5, 0.3, 0.5]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 4
+        }}
+      />
+    </div>
   );
 
   return (
     <div className="min-h-screen bg-gray-900 text-white overflow-hidden" ref={containerRef}>
-      <Cursor />
       
-      {/* Hero Section with Cinematic Intro */}
+      {/* Hero Section */}
       <motion.section 
-        className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900"
-        style={{ opacity, scale }}
+        className="relative min-h-screen flex items-center justify-center bg-gray-900"
+        style={{ opacity }}
       >
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.6, 0.3]
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
-            animate={{
-              scale: [1.2, 1, 1.2],
-              opacity: [0.6, 0.3, 0.6]
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 2
-            }}
-          />
-        </div>
-
-        <MorphingSVG />
+        <BackgroundPattern />
 
         <motion.div 
           className="text-center z-10 max-w-6xl mx-auto px-4"
-          variants={containerVariants}
+          variants={staggerContainer}
           initial="hidden"
           animate="visible"
         >
-          {/* Kinetic Typography */}
+          {/* Main Title */}
           <motion.div className="mb-8">
             <motion.h1 
-              className="text-6xl md:text-8xl font-black mb-6 leading-tight"
-              variants={textVariants}
+              className="text-5xl md:text-7xl font-black mb-6 leading-tight"
+              variants={fadeInUp}
               custom={0}
             >
               <motion.span 
@@ -221,7 +164,7 @@ const HomePage = () => {
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
                 }}
                 transition={{
-                  duration: 3,
+                  duration: 5,
                   repeat: Infinity,
                   ease: "linear"
                 }}
@@ -231,60 +174,35 @@ const HomePage = () => {
               >
                 1MarketLive
               </motion.span>
-            </motion.h1>
-            
-            <motion.div
-              variants={textVariants}
-              custom={1}
-              className="text-2xl md:text-4xl font-light text-gray-300 mb-4"
-            >
-              Your E-commerce{" "}
               <motion.span
-                className="text-blue-400 font-bold"
-                animate={{
-                  scale: [1, 1.05, 1],
-                  color: ["#60a5fa", "#a78bfa", "#60a5fa"]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
+                className="block text-purple-300"
+                variants={fadeInUp}
+                custom={1}
               >
-                Powerhouse
+                Your E-commerce Powerhouse
               </motion.span>
-            </motion.div>
+            </motion.h1>
           </motion.div>
 
           <motion.p 
-            className="text-xl md:text-2xl mb-12 text-gray-400 max-w-4xl mx-auto leading-relaxed"
-            variants={textVariants}
+            className="text-lg md:text-xl mb-12 text-gray-400 max-w-4xl mx-auto leading-relaxed"
+            variants={fadeInUp}
             custom={2}
           >
-            A next-gen, AI-powered affiliate and dropshipping marketplace. 
-            Discover top-selling products, automate listings, and integrate with 
-            Amazon, Shopify, and more.
+            Shop top products and AI tools with seamless integrations, automation, and honest reviews.
           </motion.p>
 
-          {/* CTA Buttons with Advanced Hover Effects */}
+          {/* CTA Buttons */}
           <motion.div 
             className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
-            variants={textVariants}
+            variants={fadeInUp}
             custom={3}
           >
             <motion.button
-              className="group relative bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold text-lg overflow-hidden"
+              className="group relative bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onHoverStart={() => setCursorVariant("hover")}
-              onHoverEnd={() => setCursorVariant("default")}
             >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "0%" }}
-                transition={{ duration: 0.3 }}
-              />
               <span className="relative z-10 flex items-center gap-2">
                 <Zap className="w-5 h-5" />
                 Start Shopping
@@ -292,19 +210,10 @@ const HomePage = () => {
             </motion.button>
 
             <motion.button
-              className="group border-2 border-blue-400 text-blue-400 hover:text-white px-8 py-4 rounded-full font-semibold text-lg relative overflow-hidden"
+              className="group border-2 border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onHoverStart={() => setCursorVariant("hover")}
-              onHoverEnd={() => setCursorVariant("default")}
             >
-              <motion.div
-                className="absolute inset-0 bg-blue-400"
-                initial={{ scale: 0 }}
-                whileHover={{ scale: 1 }}
-                transition={{ duration: 0.3 }}
-                style={{ originX: 0.5, originY: 0.5 }}
-              />
               <span className="relative z-10 flex items-center gap-2">
                 <Tag className="w-5 h-5" />
                 See Top Deals
@@ -312,10 +221,10 @@ const HomePage = () => {
             </motion.button>
           </motion.div>
 
-          {/* Feature Icons with Floating Animation */}
+          {/* Feature Icons */}
           <motion.div 
             className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
-            variants={containerVariants}
+            variants={staggerContainer}
           >
             {[
               { icon: "🌐", text: "All Product Genres" },
@@ -326,13 +235,13 @@ const HomePage = () => {
               <motion.div
                 key={index}
                 className="text-center"
-                variants={floatingVariants}
+                variants={subtleFloat}
                 animate="animate"
                 style={{ animationDelay: `${index * 0.5}s` }}
               >
                 <motion.div 
-                  className="text-4xl mb-3"
-                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  className="text-3xl mb-3"
+                  whileHover={{ scale: 1.1 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   {item.icon}
@@ -342,32 +251,17 @@ const HomePage = () => {
             ))}
           </motion.div>
         </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="w-6 h-10 border-2 border-blue-400 rounded-full flex justify-center">
-            <motion.div
-              className="w-1 h-3 bg-blue-400 rounded-full mt-2"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </div>
-        </motion.div>
       </motion.section>
 
-      {/* Stats Section with Animated Counters */}
+      {/* Stats Section */}
       <motion.section 
-        className="py-20 bg-gray-800/50 backdrop-blur-sm"
+        className="py-20 bg-gray-800/30"
         style={{ y: y1 }}
       >
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
             className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
-            variants={containerVariants}
+            variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -380,12 +274,12 @@ const HomePage = () => {
             ].map((stat, index) => (
               <motion.div
                 key={index}
-                variants={cardVariants}
+                variants={cardHover}
                 className="p-6"
               >
                 <motion.div 
-                  className="text-4xl md:text-5xl font-bold text-blue-400 mb-2"
-                  whileHover={{ scale: 1.1 }}
+                  className="text-3xl md:text-4xl font-bold text-blue-400 mb-2"
+                  whileHover={{ scale: 1.05 }}
                 >
                   <AnimatedCounter end={stat.number} />
                   {stat.suffix}
@@ -397,7 +291,7 @@ const HomePage = () => {
         </div>
       </motion.section>
 
-      {/* AI Business Partner Section with Advanced Animations */}
+      {/* AI Business Partner Section */}
       <motion.section 
         className="py-20 px-4 bg-gray-900"
         style={{ y: y2 }}
@@ -405,21 +299,13 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
             <motion.h2 
-              className="text-4xl md:text-6xl font-bold mb-6"
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "linear"
-              }}
+              className="text-4xl md:text-5xl font-bold mb-6"
             >
               Your Complete{" "}
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -434,7 +320,7 @@ const HomePage = () => {
 
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={containerVariants}
+            variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -485,26 +371,24 @@ const HomePage = () => {
             ].map((feature, index) => (
               <motion.div
                 key={index}
-                variants={cardVariants}
+                variants={cardHover}
                 whileHover="hover"
                 className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 overflow-hidden"
-                onHoverStart={() => setCursorVariant("hover")}
-                onHoverEnd={() => setCursorVariant("default")}
               >
-                {/* Gradient overlay on hover */}
+                {/* Subtle gradient overlay on hover */}
                 <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
                 />
                 
                 <motion.div
-                  className={`text-4xl mb-6 bg-gradient-to-r ${feature.color} bg-clip-text text-transparent`}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className={`text-3xl mb-6 bg-gradient-to-r ${feature.color} bg-clip-text text-transparent`}
+                  whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <feature.icon className="w-12 h-12" />
+                  <feature.icon className="w-10 h-10" />
                 </motion.div>
                 
-                <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-blue-300 transition-colors">
+                <h3 className="text-xl font-bold mb-4 text-white group-hover:text-blue-300 transition-colors">
                   {feature.title}
                 </h3>
                 
@@ -517,7 +401,7 @@ const HomePage = () => {
                     <motion.li
                       key={idx}
                       className="text-sm text-gray-500 flex items-center gap-2"
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.1 }}
                     >
@@ -536,14 +420,14 @@ const HomePage = () => {
         </div>
       </motion.section>
 
-      {/* Platform Integrations with Morphing Cards */}
-      <motion.section className="py-20 px-4 bg-gray-800/30">
+      {/* Platform Integrations */}
+      <motion.section className="py-20 px-4 bg-gray-800/20">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -560,7 +444,7 @@ const HomePage = () => {
 
           <motion.div
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-16"
-            variants={containerVariants}
+            variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -575,19 +459,16 @@ const HomePage = () => {
             ].map((platform, index) => (
               <motion.div
                 key={index}
-                variants={cardVariants}
+                variants={cardHover}
                 whileHover={{
                   scale: 1.05,
-                  rotateY: 10,
-                  boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)"
+                  y: -5
                 }}
                 className={`bg-gradient-to-br ${platform.color} rounded-xl p-6 text-center shadow-lg border border-white/10`}
-                style={{ transformStyle: "preserve-3d" }}
               >
                 <motion.div 
-                  className="text-3xl mb-3"
-                  animate={{ rotateY: [0, 360] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  className="text-2xl mb-3"
+                  whileHover={{ scale: 1.1 }}
                 >
                   {platform.icon}
                 </motion.div>
@@ -601,15 +482,15 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <motion.div
               className="space-y-6"
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
               <h3 className="text-2xl font-bold text-white flex items-center gap-3">
                 <motion.span
                   animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                 >
                   🔗
                 </motion.span>
@@ -624,9 +505,9 @@ const HomePage = () => {
                 <motion.div
                   key={index}
                   className="flex items-center space-x-4"
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.2 }}
+                  transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
                   <motion.div
@@ -645,15 +526,15 @@ const HomePage = () => {
 
             <motion.div
               className="space-y-6"
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
               <h3 className="text-2xl font-bold text-white flex items-center gap-3">
                 <motion.span
                   animate={{ rotate: [0, -360] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                 >
                   📦
                 </motion.span>
@@ -668,9 +549,9 @@ const HomePage = () => {
                 <motion.div
                   key={index}
                   className="flex items-center space-x-4"
-                  initial={{ opacity: 0, x: 30 }}
+                  initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.2 }}
+                  transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
                   <motion.div
@@ -690,14 +571,14 @@ const HomePage = () => {
         </div>
       </motion.section>
 
-      {/* AI Tools Section with Liquid Morphing Effects */}
+      {/* AI Tools Section */}
       <motion.section className="py-20 px-4 bg-gray-900">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -713,7 +594,7 @@ const HomePage = () => {
 
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={containerVariants}
+            variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -764,37 +645,22 @@ const HomePage = () => {
             ].map((tool, index) => (
               <motion.div
                 key={index}
-                variants={cardVariants}
-                whileHover={{
-                  scale: 1.02,
-                  rotateX: 5,
-                  boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)"
-                }}
+                variants={cardHover}
+                whileHover="hover"
                 className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 overflow-hidden"
-                style={{ transformStyle: "preserve-3d" }}
               >
-                {/* Liquid morphing background */}
+                {/* Subtle background effect */}
                 <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-10`}
-                  animate={{
-                    borderRadius: ["20px", "40px 20px", "20px 40px", "20px"]
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
+                  className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-5`}
+                  transition={{ duration: 0.3 }}
                 />
                 
                 <motion.div
-                  className={`text-4xl mb-6 bg-gradient-to-r ${tool.color} bg-clip-text text-transparent`}
-                  whileHover={{ 
-                    scale: 1.1, 
-                    rotate: [0, 5, -5, 0],
-                    transition: { duration: 0.5 }
-                  }}
+                  className={`text-3xl mb-6 bg-gradient-to-r ${tool.color} bg-clip-text text-transparent`}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <tool.icon className="w-12 h-12" />
+                  <tool.icon className="w-10 h-10" />
                 </motion.div>
                 
                 <h3 className="text-xl font-bold mb-4 text-white group-hover:text-blue-300 transition-colors">
@@ -810,20 +676,20 @@ const HomePage = () => {
                     <motion.li
                       key={idx}
                       className="text-sm text-gray-500 flex items-center gap-2"
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.1 }}
                     >
                       <motion.div
                         className="w-1.5 h-1.5 bg-blue-400 rounded-full"
                         animate={{ 
-                          scale: [1, 1.3, 1],
+                          scale: [1, 1.2, 1],
                           opacity: [0.5, 1, 0.5]
                         }}
                         transition={{ 
                           duration: 2, 
                           repeat: Infinity, 
-                          delay: idx * 0.3 
+                          delay: idx * 0.2 
                         }}
                       />
                       {feature}
@@ -836,26 +702,26 @@ const HomePage = () => {
         </div>
       </motion.section>
 
-      {/* Final CTA with Particle Effects */}
+      {/* Final CTA */}
       <motion.section 
-        className="relative py-20 px-4 bg-gradient-to-br from-blue-900 via-purple-900 to-gray-900 overflow-hidden"
+        className="relative py-20 px-4 bg-gradient-to-br from-blue-900/50 via-purple-900/50 to-gray-900 overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 1 }}
         viewport={{ once: true }}
       >
-        {/* Animated particles */}
+        {/* Subtle animated background */}
         <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(10)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 bg-blue-400 rounded-full opacity-30"
+              className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-20"
               animate={{
                 x: [Math.random() * window.innerWidth, Math.random() * window.innerWidth],
                 y: [Math.random() * window.innerHeight, Math.random() * window.innerHeight],
               }}
               transition={{
-                duration: Math.random() * 10 + 10,
+                duration: Math.random() * 20 + 20,
                 repeat: Infinity,
                 ease: "linear"
               }}
@@ -869,10 +735,10 @@ const HomePage = () => {
 
         <div className="relative max-w-4xl mx-auto text-center z-10">
           <motion.h2 
-            className="text-4xl md:text-6xl font-bold mb-6 text-white"
-            initial={{ opacity: 0, y: 50 }}
+            className="text-4xl md:text-5xl font-bold mb-6 text-white"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
             Ready to Transform Your Business?
@@ -880,9 +746,9 @@ const HomePage = () => {
           
           <motion.p 
             className="text-xl mb-8 text-purple-100 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
             Join thousands of successful entrepreneurs who have already revolutionized 
@@ -891,9 +757,9 @@ const HomePage = () => {
           
           <motion.div 
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
             <motion.button
@@ -901,13 +767,7 @@ const HomePage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "0%" }}
-                transition={{ duration: 0.3 }}
-              />
-              <span className="relative z-10 group-hover:text-white transition-colors">
+              <span className="relative z-10">
                 Start Free Trial
               </span>
             </motion.button>
@@ -925,7 +785,7 @@ const HomePage = () => {
             className="flex justify-center items-center space-x-8 text-purple-200"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
             viewport={{ once: true }}
           >
             <div className="flex items-center">
