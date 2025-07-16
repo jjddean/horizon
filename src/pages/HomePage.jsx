@@ -136,11 +136,11 @@ const HomePage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white overflow-hidden" ref={containerRef}>
+    <div className="min-h-screen bg-background text-foreground overflow-hidden" ref={containerRef}>
       
       {/* Hero Section */}
       <motion.section 
-        className="relative min-h-screen flex items-center justify-center bg-gray-900"
+        className="relative min-h-screen flex items-center justify-center bg-background"
         style={{ opacity }}
       >
         <BackgroundPattern />
@@ -255,7 +255,7 @@ const HomePage = () => {
 
       {/* Stats Section */}
       <motion.section 
-        className="py-20 bg-gray-800/30"
+        className="py-20 bg-secondary/30"
         style={{ y: y1 }}
       >
         <div className="max-w-7xl mx-auto px-4">
@@ -293,7 +293,7 @@ const HomePage = () => {
 
       {/* AI Business Partner Section */}
       <motion.section 
-        className="py-20 px-4 bg-gray-900"
+        className="py-20 px-4 bg-background"
         style={{ y: y2 }}
       >
         <div className="max-w-7xl mx-auto">
@@ -421,7 +421,7 @@ const HomePage = () => {
       </motion.section>
 
       {/* Platform Integrations */}
-      <motion.section className="py-20 px-4 bg-gray-800/20">
+      <motion.section className="py-20 px-4 bg-secondary/20">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
@@ -572,7 +572,7 @@ const HomePage = () => {
       </motion.section>
 
       {/* AI Tools Section */}
-      <motion.section className="py-20 px-4 bg-gray-900">
+      <motion.section className="py-20 px-4 bg-background">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
@@ -704,7 +704,7 @@ const HomePage = () => {
 
       {/* Final CTA */}
       <motion.section 
-        className="relative py-20 px-4 bg-gradient-to-br from-blue-900/50 via-purple-900/50 to-gray-900 overflow-hidden"
+        className="relative py-20 px-4 bg-gradient-to-br from-primary/20 via-secondary/30 to-background overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -735,7 +735,7 @@ const HomePage = () => {
 
         <div className="relative max-w-4xl mx-auto text-center z-10">
           <motion.h2 
-            className="text-4xl md:text-5xl font-bold mb-6 text-white"
+            className="text-4xl md:text-5xl font-bold mb-6 text-foreground"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -745,7 +745,7 @@ const HomePage = () => {
           </motion.h2>
           
           <motion.p 
-            className="text-xl mb-8 text-purple-100 max-w-2xl mx-auto"
+            className="text-xl mb-8 text-muted-foreground max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -763,7 +763,7 @@ const HomePage = () => {
             viewport={{ once: true }}
           >
             <motion.button
-              className="bg-white text-purple-600 px-8 py-4 rounded-full font-semibold text-lg relative overflow-hidden group"
+              className="bg-primary text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg relative overflow-hidden group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -773,7 +773,7 @@ const HomePage = () => {
             </motion.button>
             
             <motion.button
-              className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-purple-600 transition-colors"
+              className="border-2 border-primary text-primary px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary hover:text-primary-foreground transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -782,7 +782,7 @@ const HomePage = () => {
           </motion.div>
           
           <motion.div 
-            className="flex justify-center items-center space-x-8 text-purple-200"
+            className="flex justify-center items-center space-x-8 text-muted-foreground"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.6 }}
