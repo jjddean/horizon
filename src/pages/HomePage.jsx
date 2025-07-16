@@ -159,7 +159,7 @@ const HomePage = () => {
               custom={0}
             >
               <motion.span 
-                className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
+                className="inline-block bg-gradient-to-r from-primary via-purple-400 to-pink-500 bg-clip-text text-transparent"
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
                 }}
@@ -175,7 +175,7 @@ const HomePage = () => {
                 1MarketLive
               </motion.span>
               <motion.span
-                className="block text-purple-300"
+                className="block text-primary-foreground"
                 variants={fadeInUp}
                 custom={1}
               >
@@ -185,7 +185,7 @@ const HomePage = () => {
           </motion.div>
 
           <motion.p 
-            className="text-lg md:text-xl mb-12 text-gray-400 max-w-4xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl mb-12 text-muted-foreground max-w-4xl mx-auto leading-relaxed"
             variants={fadeInUp}
             custom={2}
           >
@@ -199,7 +199,7 @@ const HomePage = () => {
             custom={3}
           >
             <motion.button
-              className="group relative bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
+              className="group relative bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -210,7 +210,7 @@ const HomePage = () => {
             </motion.button>
 
             <motion.button
-              className="group border-2 border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
+              className="group border-2 border-border text-muted-foreground hover:text-foreground hover:border-primary px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -246,7 +246,7 @@ const HomePage = () => {
                 >
                   {item.icon}
                 </motion.div>
-                <div className="text-sm text-gray-400">{item.text}</div>
+                <div className="text-sm text-muted-foreground">{item.text}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -278,13 +278,13 @@ const HomePage = () => {
                 className="p-6"
               >
                 <motion.div 
-                  className="text-3xl md:text-4xl font-bold text-blue-400 mb-2"
+                  className="text-3xl md:text-4xl font-bold text-primary mb-2"
                   whileHover={{ scale: 1.05 }}
                 >
                   <AnimatedCounter end={stat.number} />
                   {stat.suffix}
                 </motion.div>
-                <div className="text-gray-400">{stat.label}</div>
+                <div className="text-muted-foreground">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -308,11 +308,11 @@ const HomePage = () => {
               className="text-4xl md:text-5xl font-bold mb-6"
             >
               Your Complete{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
                 AI Business Partner
               </span>
             </motion.h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               From product discovery to automated operations, our AI handles everything 
               so you can focus on growing your business.
             </p>
@@ -373,7 +373,7 @@ const HomePage = () => {
                 key={index}
                 variants={cardHover}
                 whileHover="hover"
-                className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 overflow-hidden"
+                className="group relative bg-card backdrop-blur-sm rounded-2xl p-8 border border-border overflow-hidden"
               >
                 {/* Subtle gradient overlay on hover */}
                 <motion.div
@@ -388,11 +388,11 @@ const HomePage = () => {
                   <feature.icon className="w-10 h-10" />
                 </motion.div>
                 
-                <h3 className="text-xl font-bold mb-4 text-white group-hover:text-blue-300 transition-colors">
+                <h3 className="text-xl font-bold mb-4 text-card-foreground group-hover:text-primary transition-colors">
                   {feature.title}
                 </h3>
                 
-                <p className="text-gray-400 mb-6 group-hover:text-gray-300 transition-colors">
+                <p className="text-muted-foreground mb-6 group-hover:text-card-foreground transition-colors">
                   {feature.description}
                 </p>
                 
@@ -400,13 +400,13 @@ const HomePage = () => {
                   {feature.features.map((item, idx) => (
                     <motion.li
                       key={idx}
-                      className="text-sm text-gray-500 flex items-center gap-2"
+                      className="text-sm text-muted-foreground flex items-center gap-2"
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.1 }}
                     >
                       <motion.div
-                        className="w-1.5 h-1.5 bg-blue-400 rounded-full"
+                        className="w-1.5 h-1.5 bg-primary rounded-full"
                         animate={{ scale: [1, 1.2, 1] }}
                         transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
                       />
@@ -432,11 +432,11 @@ const HomePage = () => {
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Seamless{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
                 Platform Integrations
               </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Connect with all major e-commerce platforms and marketplaces with 
               one-click integration and automated synchronization.
             </p>
@@ -472,8 +472,8 @@ const HomePage = () => {
                 >
                   {platform.icon}
                 </motion.div>
-                <h3 className="font-bold text-white">{platform.name}</h3>
-                <p className="text-xs text-white/80 mt-1">{platform.desc}</p>
+                <h3 className="font-bold text-primary-foreground">{platform.name}</h3>
+                <p className="text-xs text-primary-foreground/80 mt-1">{platform.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -487,7 +487,7 @@ const HomePage = () => {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+              <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
                 <motion.span
                   animate={{ rotate: [0, 360] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
@@ -517,8 +517,8 @@ const HomePage = () => {
                     <item.icon className="w-5 h-5 text-purple-400" />
                   </motion.div>
                   <div>
-                    <h4 className="font-semibold text-white">{item.title}</h4>
-                    <p className="text-sm text-gray-400">{item.desc}</p>
+                    <h4 className="font-semibold text-foreground">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -531,7 +531,7 @@ const HomePage = () => {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+              <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
                 <motion.span
                   animate={{ rotate: [0, -360] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
@@ -561,8 +561,8 @@ const HomePage = () => {
                     <item.icon className="w-5 h-5 text-blue-400" />
                   </motion.div>
                   <div>
-                    <h4 className="font-semibold text-white">{item.title}</h4>
-                    <p className="text-sm text-gray-400">{item.desc}</p>
+                    <h4 className="font-semibold text-foreground">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -582,11 +582,11 @@ const HomePage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
                 AI-Powered Business Tools
               </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Comprehensive suite of AI tools designed to automate your workflow 
               and boost productivity across all business operations.
             </p>
@@ -647,7 +647,7 @@ const HomePage = () => {
                 key={index}
                 variants={cardHover}
                 whileHover="hover"
-                className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 overflow-hidden"
+                className="group relative bg-card backdrop-blur-sm rounded-2xl p-8 border border-border overflow-hidden"
               >
                 {/* Subtle background effect */}
                 <motion.div
@@ -663,11 +663,11 @@ const HomePage = () => {
                   <tool.icon className="w-10 h-10" />
                 </motion.div>
                 
-                <h3 className="text-xl font-bold mb-4 text-white group-hover:text-blue-300 transition-colors">
+                <h3 className="text-xl font-bold mb-4 text-card-foreground group-hover:text-primary transition-colors">
                   {tool.title}
                 </h3>
                 
-                <p className="text-gray-400 mb-4 group-hover:text-gray-300 transition-colors">
+                <p className="text-muted-foreground mb-4 group-hover:text-card-foreground transition-colors">
                   {tool.description}
                 </p>
                 
@@ -675,13 +675,13 @@ const HomePage = () => {
                   {tool.features.map((feature, idx) => (
                     <motion.li
                       key={idx}
-                      className="text-sm text-gray-500 flex items-center gap-2"
+                      className="text-sm text-muted-foreground flex items-center gap-2"
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.1 }}
                     >
                       <motion.div
-                        className="w-1.5 h-1.5 bg-blue-400 rounded-full"
+                        className="w-1.5 h-1.5 bg-primary rounded-full"
                         animate={{ 
                           scale: [1, 1.2, 1],
                           opacity: [0.5, 1, 0.5]
@@ -704,7 +704,7 @@ const HomePage = () => {
 
       {/* Final CTA */}
       <motion.section 
-        className="relative py-20 px-4 bg-gradient-to-br from-primary/20 via-secondary/30 to-background overflow-hidden"
+        className="relative py-20 px-4 bg-gradient-to-br from-primary/20 via-purple-900/20 to-background overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -715,7 +715,7 @@ const HomePage = () => {
           {[...Array(10)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-20"
+              className="absolute w-1 h-1 bg-primary rounded-full opacity-20"
               animate={{
                 x: [Math.random() * window.innerWidth, Math.random() * window.innerWidth],
                 y: [Math.random() * window.innerHeight, Math.random() * window.innerHeight],
