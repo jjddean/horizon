@@ -1,5 +1,7 @@
 # Enhanced Financial News Component
 
+> **Deployment Status**: Updated for Vercel deployment - 2024
+
 A top-tier React component for displaying financial news with live TV streaming capabilities, designed for modern financial dashboards and trading platforms.
 
 ## Features
