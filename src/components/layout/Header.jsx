@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
     import { NavLink } from 'react-router-dom';
     import { motion } from 'framer-motion';
-    import { Zap, Menu, X, Gift, Star, Info, Cpu, ShoppingBag, ChevronDown, Heart, BookOpen, Settings, Monitor } from 'lucide-react';
+    import { Zap, Menu, X, Gift, Star, Info, Cpu, ShoppingBag, ChevronDown, Heart, BookOpen, Settings, Monitor, Tv } from 'lucide-react';
     import { Button } from '@/components/ui/button';
     import { useToast } from '@/components/ui/use-toast';
 
@@ -183,6 +183,9 @@ import React, { useState } from 'react';
                   </div>
                 )}
               </div>
+              <NavItem to="/news">
+                <Tv className="h-4 w-4" /> Financial News
+              </NavItem>
               <NavItem to="/about">
                 <Info className="h-4 w-4" /> About
               </NavItem>
@@ -215,6 +218,7 @@ import React, { useState } from 'react';
                 <NavItem to="/marketplace" onClick={closeMenu}>Marketplace</NavItem>
                 <NavItem to="/marketplace/health" onClick={closeMenu}>Health & Wellness</NavItem>
                 <NavItem to="/ai-tools" onClick={closeMenu}>AI Tools</NavItem>
+                <NavItem to="/news" onClick={closeMenu}>Financial News</NavItem>
                 <NavItem to="/about" onClick={closeMenu}>About</NavItem>
               </nav>
             </motion.div>
