@@ -117,6 +117,7 @@ export function TVChannelGrid({ className }) {
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [isStreamActive, setIsStreamActive] = useState(false);
+  const [viewMode, setViewMode] = useState('sidebar'); // 'sidebar' or 'fullpage'
 
   const channels = Object.values(NewsChannel);
 
@@ -133,6 +134,17 @@ export function TVChannelGrid({ className }) {
   const handleChannelSelect = (channel) => {
     setSelectedChannel(channel);
     setActiveTab('overview');
+    setIsStreamActive(false);
+    setViewMode('sidebar'); // Always start with sidebar
+  };
+
+  const handleFullPageToggle = () => {
+    setViewMode(viewMode === 'sidebar' ? 'fullpage' : 'sidebar');
+  };
+
+  const handleClose = () => {
+    setSelectedChannel(null);
+    setViewMode('sidebar');
     setIsStreamActive(false);
   };
 
@@ -223,120 +235,240 @@ export function TVChannelGrid({ className }) {
         </div>
       </div>
 
-      {/* Enhanced Pop-out Modal */}
-      <Dialog open={!!selectedChannel} onOpenChange={() => setSelectedChannel(null)}>
-        <DialogContent className="max-w-7xl max-h-[90vh] overflow-hidden p-0">
+      {/* MSN-Style Sidebar/Full Page Modal */}
+      <Dialog open={!!selectedChannel} onOpenChange={handleClose}>
+        <DialogContent className={cn(
+          "overflow-hidden p-0 transition-all duration-300",
+          viewMode === 'sidebar' 
+            ? "max-w-md max-h-[85vh] fixed right-4 top-4 left-auto translate-x-0 translate-y-0" 
+            : "max-w-7xl max-h-[90vh]"
+        )}>
           {selectedChannel && (
             <div className="flex flex-col h-full">
-              <DialogHeader className="p-6 pb-4 border-b">
-                <div className="flex items-center gap-4">
+              <DialogHeader className={cn(
+                "border-b flex-shrink-0",
+                viewMode === 'sidebar' ? "p-4 pb-3" : "p-6 pb-4"
+              )}>
+                <div className="flex items-center gap-3">
                   <img 
                     src={selectedChannel.logo} 
                     alt={selectedChannel.name}
-                    className="w-20 h-12 object-contain bg-white rounded-lg p-2 shadow-sm"
+                    className={cn(
+                      "object-contain bg-white rounded-lg p-1 shadow-sm",
+                      viewMode === 'sidebar' ? "w-12 h-8" : "w-20 h-12"
+                    )}
                     onError={(e) => {
                       e.target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="48" viewBox="0 0 80 48"><rect width="80" height="48" fill="%23f3f4f6"/><text x="40" y="24" text-anchor="middle" fill="%23374151" font-size="10">${selectedChannel.name}</text></svg>`;
                     }}
                   />
-                  <div className="flex-1">
-                    <DialogTitle className="text-2xl">{selectedChannel.name}</DialogTitle>
-                    <p className="text-muted-foreground">{selectedChannel.description}</p>
+                  <div className="flex-1 min-w-0">
+                    <DialogTitle className={cn(
+                      "truncate",
+                      viewMode === 'sidebar' ? "text-lg" : "text-2xl"
+                    )}>
+                      {selectedChannel.name}
+                    </DialogTitle>
+                    {viewMode === 'fullpage' && (
+                      <p className="text-muted-foreground text-sm">{selectedChannel.description}</p>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     {selectedChannel.isLive && (
-                      <Badge variant="destructive" className="animate-pulse">
-                        <Play className="w-3 h-3 mr-1" />
+                      <Badge variant="destructive" className="animate-pulse text-xs">
+                        <Play className="w-2 h-2 mr-1" />
                         LIVE
                       </Badge>
                     )}
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        setIsStreamActive(!isStreamActive);
-                        setActiveTab('stream');
-                      }}
+                      onClick={handleFullPageToggle}
+                      className="text-xs px-2"
                     >
-                      <Volume2 className="w-4 h-4 mr-2" />
-                      {isStreamActive ? 'Stop Stream' : 'Watch Live'}
+                      <Maximize className="w-3 h-3 mr-1" />
+                      {viewMode === 'sidebar' ? 'Expand' : 'Collapse'}
                     </Button>
                   </div>
                 </div>
               </DialogHeader>
 
               <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-                <TabsList className="w-full justify-start rounded-none border-b px-6">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="stream">Live Stream</TabsTrigger>
-                  <TabsTrigger value="stories">Recent Stories</TabsTrigger>
-                  <TabsTrigger value="analysis">Market Impact</TabsTrigger>
+                <TabsList className={cn(
+                  "w-full justify-start rounded-none border-b",
+                  viewMode === 'sidebar' ? "px-4" : "px-6"
+                )}>
+                  <TabsTrigger value="overview" className={viewMode === 'sidebar' ? "text-xs px-2" : ""}>
+                    {viewMode === 'sidebar' ? 'Info' : 'Overview'}
+                  </TabsTrigger>
+                  <TabsTrigger value="stream" className={viewMode === 'sidebar' ? "text-xs px-2" : ""}>
+                    {viewMode === 'sidebar' ? 'Live' : 'Live Stream'}
+                  </TabsTrigger>
+                  {viewMode === 'fullpage' && (
+                    <>
+                      <TabsTrigger value="stories">Recent Stories</TabsTrigger>
+                      <TabsTrigger value="analysis">Market Impact</TabsTrigger>
+                    </>
+                  )}
                 </TabsList>
 
                 <div className="flex-1 overflow-y-auto">
-                  <TabsContent value="overview" className="p-6 space-y-6 mt-0">
+                  <TabsContent value="overview" className={cn(
+                    "space-y-4 mt-0",
+                    viewMode === 'sidebar' ? "p-4" : "p-6 space-y-6"
+                  )}>
                     {/* Featured Story */}
-                    <div className={cn("p-6 rounded-xl bg-gradient-to-r", selectedChannel.color, "text-white")}>
-                      <Badge variant="secondary" className="mb-3">
+                    <div className={cn(
+                      "rounded-xl bg-gradient-to-r text-white",
+                      selectedChannel.color,
+                      viewMode === 'sidebar' ? "p-4" : "p-6"
+                    )}>
+                      <Badge variant="secondary" className={cn(
+                        viewMode === 'sidebar' ? "mb-2 text-xs" : "mb-3"
+                      )}>
                         {selectedChannel.category}
                       </Badge>
-                      <h3 className="text-2xl font-bold mb-3">{selectedChannel.headline}</h3>
-                      <p className="text-white/90 mb-4 text-lg">{selectedChannel.description}</p>
-                      <div className="flex items-center justify-between">
+                      <h3 className={cn(
+                        "font-bold mb-2",
+                        viewMode === 'sidebar' ? "text-lg" : "text-2xl mb-3"
+                      )}>
+                        {selectedChannel.headline}
+                      </h3>
+                      {viewMode === 'fullpage' && (
+                        <p className="text-white/90 mb-4 text-lg">{selectedChannel.description}</p>
+                      )}
+                      <div className={cn(
+                        "flex items-center",
+                        viewMode === 'sidebar' ? "justify-between text-sm" : "justify-between"
+                      )}>
                         <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          <span>Updated {selectedChannel.lastUpdated}</span>
+                          <Clock className={cn(viewMode === 'sidebar' ? "w-3 h-3" : "w-4 h-4")} />
+                          <span className={viewMode === 'sidebar' ? "text-xs" : ""}>
+                            {selectedChannel.lastUpdated}
+                          </span>
                         </div>
-                        <Button variant="secondary" size="sm">
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Read Full Story
-                        </Button>
+                        {viewMode === 'fullpage' && (
+                          <Button variant="secondary" size="sm">
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Read Full Story
+                          </Button>
+                        )}
+                        {viewMode === 'sidebar' && (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => {
+                              setIsStreamActive(!isStreamActive);
+                              setActiveTab('stream');
+                            }}
+                            className="text-xs px-2 py-1"
+                          >
+                            <Volume2 className="w-3 h-3 mr-1" />
+                            {isStreamActive ? 'Stop' : 'Watch'}
+                          </Button>
+                        )}
                       </div>
                     </div>
 
-                    {/* Quick Stats */}
-                    <div className="grid grid-cols-3 gap-4">
-                      <Card className="p-4 text-center">
-                        <div className="text-2xl font-bold text-green-600">Live</div>
-                        <div className="text-sm text-muted-foreground">Broadcast Status</div>
-                      </Card>
-                      <Card className="p-4 text-center">
-                        <div className="text-2xl font-bold">{selectedChannel.stories.length}</div>
-                        <div className="text-sm text-muted-foreground">Recent Stories</div>
-                      </Card>
-                      <Card className="p-4 text-center">
-                        <div className="text-2xl font-bold">24/7</div>
-                        <div className="text-sm text-muted-foreground">Coverage</div>
-                      </Card>
-                    </div>
+                    {/* Quick Stats - Only show in full page mode */}
+                    {viewMode === 'fullpage' && (
+                      <div className="grid grid-cols-3 gap-4">
+                        <Card className="p-4 text-center">
+                          <div className="text-2xl font-bold text-green-600">Live</div>
+                          <div className="text-sm text-muted-foreground">Broadcast Status</div>
+                        </Card>
+                        <Card className="p-4 text-center">
+                          <div className="text-2xl font-bold">{selectedChannel.stories.length}</div>
+                          <div className="text-sm text-muted-foreground">Recent Stories</div>
+                        </Card>
+                        <Card className="p-4 text-center">
+                          <div className="text-2xl font-bold">24/7</div>
+                          <div className="text-sm text-muted-foreground">Coverage</div>
+                        </Card>
+                      </div>
+                    )}
+
+                    {/* Sidebar-specific content */}
+                    {viewMode === 'sidebar' && (
+                      <div className="space-y-3">
+                        <div className="text-sm text-muted-foreground">
+                          {selectedChannel.description}
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">
+                            {selectedChannel.stories.length} recent stories
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleFullPageToggle}
+                            className="text-xs px-2 py-1"
+                          >
+                            View All
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </TabsContent>
 
-                  <TabsContent value="stream" className="p-6 mt-0">
+                  <TabsContent value="stream" className={cn(
+                    "mt-0",
+                    viewMode === 'sidebar' ? "p-4" : "p-6"
+                  )}>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold">Live Broadcast</h3>
-                        <Badge variant={isStreamActive ? "destructive" : "outline"}>
+                        <h3 className={cn(
+                          "font-semibold",
+                          viewMode === 'sidebar' ? "text-sm" : "text-lg"
+                        )}>
+                          Live Broadcast
+                        </h3>
+                        <Badge variant={isStreamActive ? "destructive" : "outline"} className="text-xs">
                           {isStreamActive ? "Streaming" : "Offline"}
                         </Badge>
                       </div>
                       
                       {isStreamActive ? (
-                        <LiveTVStream embedUrl={selectedChannel.embedUrl} isActive={isStreamActive} />
+                        <div className={cn(
+                          viewMode === 'sidebar' ? "aspect-video" : "aspect-video"
+                        )}>
+                          <LiveTVStream embedUrl={selectedChannel.embedUrl} isActive={isStreamActive} />
+                        </div>
                       ) : (
-                        <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+                        <div className={cn(
+                          "bg-gray-100 rounded-lg flex items-center justify-center",
+                          viewMode === 'sidebar' ? "aspect-video" : "aspect-video"
+                        )}>
                           <div className="text-center">
-                            <Play className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                            <p className="text-gray-600 mb-4">Click "Watch Live" to start streaming</p>
-                            <Button onClick={() => setIsStreamActive(true)}>
-                              <Play className="w-4 h-4 mr-2" />
-                              Start Live Stream
+                            <Play className={cn(
+                              "mx-auto mb-3 text-gray-400",
+                              viewMode === 'sidebar' ? "w-8 h-8" : "w-16 h-16 mb-4"
+                            )} />
+                            <p className={cn(
+                              "text-gray-600 mb-3",
+                              viewMode === 'sidebar' ? "text-xs" : "mb-4"
+                            )}>
+                              {viewMode === 'sidebar' ? 'Click to start streaming' : 'Click "Watch Live" to start streaming'}
+                            </p>
+                            <Button 
+                              onClick={() => setIsStreamActive(true)}
+                              size={viewMode === 'sidebar' ? "sm" : "default"}
+                              className={viewMode === 'sidebar' ? "text-xs px-2" : ""}
+                            >
+                              <Play className={cn(
+                                "mr-2",
+                                viewMode === 'sidebar' ? "w-3 h-3" : "w-4 h-4"
+                              )} />
+                              {viewMode === 'sidebar' ? 'Watch' : 'Start Live Stream'}
                             </Button>
                           </div>
                         </div>
                       )}
                       
-                      <p className="text-sm text-muted-foreground">
-                        Note: Live streams are provided via YouTube and other platforms. Quality may vary based on your internet connection.
-                      </p>
+                      {viewMode === 'fullpage' && (
+                        <p className="text-sm text-muted-foreground">
+                          Note: Live streams are provided via YouTube and other platforms. Quality may vary based on your internet connection.
+                        </p>
+                      )}
                     </div>
                   </TabsContent>
 
