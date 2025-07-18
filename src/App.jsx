@@ -9,6 +9,7 @@ import React from 'react';
     import HealthPage from '@/pages/HealthPage';
     import AiToolsPage from '@/pages/AiToolsPage';
     import AboutPage from '@/pages/AboutPage';
+    import NewsPage from '@/pages/NewsPage';
     import NotFoundPage from '@/pages/NotFoundPage';
     import { Toaster } from '@/components/ui/toaster';
 
@@ -25,6 +26,7 @@ import React from 'react';
                 <Route path="/marketplace" element={<MarketplacePage />} />
                 <Route path="/marketplace/health" element={<HealthPage />} />
                 <Route path="/ai-tools" element={<AiToolsPage />} />
+                <Route path="/news" element={<NewsPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>
