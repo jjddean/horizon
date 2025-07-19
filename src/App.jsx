@@ -1,6 +1,5 @@
 import React from 'react';
 import { Search, Settings, Cloud, Sun, MapPin, ChevronDown, ChevronRight, PlayCircle, Heart, Share2, MessageSquare, ThumbsUp, Bookmark } from 'lucide-react'; // Added ThumbsUp and Bookmark for engagement icons
-c
 const App = () => {c
   // Sample data for exactly 8 news cards, with image and overlay text style
   const newsCardsData = [
