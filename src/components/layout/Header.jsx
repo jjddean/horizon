@@ -186,6 +186,9 @@ import React, { useState } from 'react';
               <NavItem to="/about">
                 <Info className="h-4 w-4" /> About
               </NavItem>
+              <NavItem to="/product-demo">
+                <Monitor className="h-4 w-4" /> Product Demo
+              </NavItem>
             </nav>
             <div className="flex flex-1 items-center justify-end space-x-4">
               <Button 
